@@ -1,0 +1,66 @@
+name: pixel-profile
+description: Generate animated pixel-art SVGs (banner, status card, divider, footer) for a GitHub profile README
+author: sknoyon324234234234
+branding:
+  icon: image
+  color: purple
+
+inputs:
+  config:
+    description: Path to a JSON config file (see profile.example.json)
+    required: false
+    default: ""
+  out:
+    description: Output directory for the SVGs
+    required: false
+    default: assets
+  title:
+    description: Big banner text (overrides the config)
+    required: false
+    default: ""
+  handle:
+    description: Your username, shown as "> handle" (overrides the config)
+    required: false
+    default: ""
+  tagline:
+    description: Second banner line (overrides the config)
+    required: false
+    default: ""
+  stack:
+    description: Comma-separated stack chips, e.g. TS,GO,RUST (overrides the config)
+    required: false
+    default: ""
+  theme:
+    description: dusk, ocean, forest, sunset or mono (overrides the config)
+    required: false
+    default: ""
+  character:
+    description: ghost, cat, slime or robot (overrides the config)
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Generate pixel-art SVGs
+      shell: bash
+      env:
+        PP_SCRIPT: ${{ github.action_path }}/pixel_profile.py
+        PP_CONFIG: ${{ inputs.config }}
+        PP_OUT: ${{ inputs.out }}
+        PP_TITLE: ${{ inputs.title }}
+        PP_HANDLE: ${{ inputs.handle }}
+        PP_TAGLINE: ${{ inputs.tagline }}
+        PP_STACK: ${{ inputs.stack }}
+        PP_THEME: ${{ inputs.theme }}
+        PP_CHARACTER: ${{ inputs.character }}
+      run: |
+        args=(--out "$PP_OUT")
+        [ -n "$PP_CONFIG" ] && args+=(--config "$PP_CONFIG")
+        [ -n "$PP_TITLE" ] && args+=(--title "$PP_TITLE")
+        [ -n "$PP_HANDLE" ] && args+=(--handle "$PP_HANDLE")
+        [ -n "$PP_TAGLINE" ] && args+=(--tagline "$PP_TAGLINE")
+        [ -n "$PP_STACK" ] && args+=(--stack "$PP_STACK")
+        [ -n "$PP_THEME" ] && args+=(--theme "$PP_THEME")
+        [ -n "$PP_CHARACTER" ] && args+=(--character "$PP_CHARACTER")
+        python3 "$PP_SCRIPT" "${args[@]}"

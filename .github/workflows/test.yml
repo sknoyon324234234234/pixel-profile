@@ -1,0 +1,51 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  cli:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.8", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Every theme and character renders valid SVG
+        run: |
+          for t in dusk ocean forest sunset mono; do
+            for c in ghost cat slime robot; do
+              python pixel_profile.py --config profile.example.json --theme "$t" --character "$c" --out "out/$t-$c" > /dev/null
+            done
+          done
+          python - <<'EOF'
+          import glob, xml.dom.minidom
+          files = glob.glob("out/*/*.svg")
+          for f in files:
+              xml.dom.minidom.parse(f)
+          assert len(files) == 5 * 4 * 4, len(files)
+          print(f"{len(files)} SVGs OK")
+          EOF
+      - name: Long text still fits
+        run: python pixel_profile.py --title "SUPERCALIFRAGILISTIC DEV" --handle a-very-long-github-username-here --tagline "full stack · rust/go & typescript wizard (ok)" --stack RUST,GO,TYPESCRIPT,PYTHON,KUBERNETES,POSTGRES --out out/long
+
+  action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+        with:
+          title: ACTION TEST
+          handle: pixel-profile
+          stack: PY,SVG
+          theme: ocean
+          character: robot
+          out: out/action
+      - run: test -s out/action/banner.svg && test -s out/action/status.svg && test -s out/action/divider.svg && test -s out/action/footer.svg

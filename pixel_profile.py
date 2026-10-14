@@ -29,6 +29,8 @@ DEFAULTS = {
     "quest": "BUILDING THINGS FOR THE WEB",
     "footer": "THANKS FOR VISITING *",
     "footer_hint": "PRESS START",
+    "theme": "dusk",
+    "character": "ghost",
 }
 
 # ---------------------------------------------------------------- palette
@@ -49,6 +51,56 @@ WINDOW = "#ffd56b"
 BUILDING = "#120822"
 SKY = ["#120a26", "#170d2e", "#1d1037", "#241340", "#2d174a", "#381b53",
        "#45205c", "#542564", "#662a6b", "#7a3070"]
+
+CLOUD = "#4a2e73"
+PANEL = "#241a42"
+MOON_LIGHT = "#fff1c1"
+MOON_DARK = "#f2d98d"
+
+# Each theme overrides some of the module-level colours above.
+THEMES = {
+    "dusk": {},
+    "ocean": {
+        "INK": "#06202e", "CARD": "#0b2233", "CARD_LINE": "#1f4d66", "PANEL": "#0f2e44",
+        "CREAM": "#e8fbff", "PINK": "#3fd0ff", "SAKURA": "#9ff3ff", "SAKURA_DARK": "#5fd8f0",
+        "LAVENDER": "#8fb8ff", "CYAN": "#7affd8", "MUTED": "#6f97ad", "WINDOW": "#ffe9a3",
+        "BUILDING": "#04121c", "CLOUD": "#1d4a66", "MOON_LIGHT": "#e8fbff", "MOON_DARK": "#b9dff0",
+        "SKY": ["#03101c", "#051726", "#071e31", "#0a263c", "#0d2f48", "#103a55",
+                "#134662", "#16536f", "#1a617c", "#1e7089"],
+    },
+    "forest": {
+        "INK": "#0e1f12", "CARD": "#13241a", "CARD_LINE": "#2f5236", "PANEL": "#182e20",
+        "CREAM": "#f2ffe6", "PINK": "#9be564", "SAKURA": "#ffd36e", "SAKURA_DARK": "#f0a93c",
+        "LAVENDER": "#c8f08f", "CYAN": "#8ff0c8", "MUTED": "#7d9f84", "WINDOW": "#ffd36e",
+        "BUILDING": "#08140b", "CLOUD": "#264a30", "MOON_LIGHT": "#f6ffd9", "MOON_DARK": "#d7e8a6",
+        "SKY": ["#07120a", "#0a170d", "#0d1d11", "#102315", "#132a19", "#17321e",
+                "#1b3a23", "#204329", "#254c2f", "#2b5636"],
+    },
+    "sunset": {
+        "INK": "#2a0f17", "CARD": "#2a1220", "CARD_LINE": "#5c2b3e", "PANEL": "#36172a",
+        "CREAM": "#fff1e0", "PINK": "#ff8a5c", "SAKURA": "#ffc27a", "SAKURA_DARK": "#ff9e5c",
+        "LAVENDER": "#ffb3c7", "CYAN": "#ffe27a", "MUTED": "#b08a99", "WINDOW": "#ffe27a",
+        "BUILDING": "#1a0710", "CLOUD": "#6b2c47", "MOON_LIGHT": "#fff4d6", "MOON_DARK": "#ffd59a",
+        "SKY": ["#1c0a24", "#2a0e2c", "#3a1233", "#4c1739", "#601c3d", "#76223f",
+                "#8d2a40", "#a5343f", "#bd423d", "#d4533a"],
+    },
+    "mono": {
+        "INK": "#111111", "CARD": "#161616", "CARD_LINE": "#3a3a3a", "PANEL": "#1e1e1e",
+        "CREAM": "#f2f2f2", "PINK": "#9a9a9a", "SAKURA": "#d0d0d0", "SAKURA_DARK": "#a8a8a8",
+        "LAVENDER": "#c8c8c8", "CYAN": "#e6e6e6", "MUTED": "#8a8a8a", "WINDOW": "#e0e0e0",
+        "BUILDING": "#0a0a0a", "CLOUD": "#2e2e2e", "MOON_LIGHT": "#f2f2f2", "MOON_DARK": "#c4c4c4",
+        "MINT": "#dcdcdc", "PEACH": "#bdbdbd", "YELLOW": "#efefef",
+        "SKY": ["#0b0b0b", "#0f0f0f", "#131313", "#171717", "#1b1b1b", "#202020",
+                "#252525", "#2a2a2a", "#303030", "#363636"],
+    },
+}
+
+
+def apply_theme(name):
+    """Swap the module-level palette for theme `name`."""
+    globals().update(THEMES[name])
+    globals()["CHIP_COLORS"] = [CYAN, YELLOW, MINT, LAVENDER, PEACH, SAKURA]
+
 
 # ---------------------------------------------------------------- 5x7 pixel font
 FONT = {
@@ -162,47 +214,124 @@ def sprite_paths(rows, x, y, px):
     return {k: "".join(v) for k, v in out.items()}
 
 
-# ---------------------------------------------------------------- sprites
-# O outline, W body, S shade, B blush, E eye, H eye highlight
-GHOST = [
-    ".....OOOOOO.....",
-    "...OOWWWWWWOO...",
-    "..OWWWWWWWWWWO..",
-    ".OWWWWWWWWWWWWO.",
-    ".OWWWWWWWWWWWWO.",
-    ".OWWWHEWWWHEWWO.",
-    ".OWWWEEWWWEEWWO.",
-    ".OWBBWWWWWWWBBO.",
-    ".OWWWWWWWWWWWWO.",
-    ".OWWWWWWWWWWWSO.",
-    ".OWWWWWWWWWWWSO.",
-    ".OWWWWWWWWWWSSO.",
-    ".OWWWWWWWWWWWSO.",
-    ".OWWOOOWWOOOWSO.",
-    "..OO...OO...OO..",
-    "................",
-]
-assert all(len(r) == 16 for r in GHOST)
-GHOST_COLORS = {"O": "#2a1747", "W": "#f4f1ff", "S": "#c9c1f0", "B": SAKURA_DARK}
+# ---------------------------------------------------------------- characters
+# O outline, W body, S shade, B blush/cheeks, E eye, H eye highlight
+CHARACTERS = {
+    "ghost": {
+        "rows": [
+            ".....OOOOOO.....",
+            "...OOWWWWWWOO...",
+            "..OWWWWWWWWWWO..",
+            ".OWWWWWWWWWWWWO.",
+            ".OWWWWWWWWWWWWO.",
+            ".OWWWHEWWWHEWWO.",
+            ".OWWWEEWWWEEWWO.",
+            ".OWBBWWWWWWWBBO.",
+            ".OWWWWWWWWWWWWO.",
+            ".OWWWWWWWWWWWSO.",
+            ".OWWWWWWWWWWWSO.",
+            ".OWWWWWWWWWWSSO.",
+            ".OWWWWWWWWWWWSO.",
+            ".OWWOOOWWOOOWSO.",
+            "..OO...OO...OO..",
+            "................",
+        ],
+        "colors": {"O": "#2a1747", "W": "#f4f1ff", "S": "#c9c1f0", "B": "#ff8fab"},
+    },
+    "cat": {
+        "rows": [
+            "................",
+            "..O..........O..",
+            ".OWO........OWO.",
+            ".OWWO......OWWO.",
+            ".OWWWOOOOOOWWWO.",
+            ".OWWWWWWWWWWWWO.",
+            ".OWWHEWWWWHEWWO.",
+            ".OWWEEWWWWEEWWO.",
+            ".OWBBWWOOWWBBWO.",
+            ".OWWWWWWWWWWWWO.",
+            "..OWWWWWWWWWWO..",
+            "..OWWWWWWWWWSO..",
+            "..OWSWWWWWWSSO..",
+            "..OWWOOWWOOWSO..",
+            "...OO..OO..OO...",
+            "................",
+        ],
+        "colors": {"O": "#2b1a12", "W": "#ffcf8a", "S": "#e9a35c", "B": "#ff8fab"},
+    },
+    "slime": {
+        "rows": [
+            "................",
+            "................",
+            "................",
+            "......OOOO......",
+            "....OOWWWWOO....",
+            "...OWWWWWWWWO...",
+            "..OWWHWWWWHWWO..",
+            "..OWWEWWWWEWWO..",
+            ".OWWWEWWWWEWWWO.",
+            ".OWBBWWWWWWBBWO.",
+            ".OWWWWWOOWWWWWO.",
+            "OWWWWWWWWWWWWSSO",
+            "OWWWWWWWWWWWSSSO",
+            "OSWWWWWWWWWWSSSO",
+            ".OOOOOOOOOOOOOO.",
+            "................",
+        ],
+        "colors": {"O": "#123d2b", "W": "#8cffc1", "S": "#4fd39a", "B": "#ff8fab"},
+    },
+    "robot": {
+        "rows": [
+            ".......OO.......",
+            ".......OO.......",
+            "....OOOOOOOO....",
+            "...OWWWWWWWWO...",
+            "..OWWWWWWWWWWO..",
+            "..OWHEWWWWHEWO..",
+            "..OWEEWWWWEEWO..",
+            "..OWWWWWWWWWWO..",
+            "..OWWOOOOOOWWO..",
+            "..OWWWWWWWWWSO..",
+            "...OOOOOOOOOO...",
+            "....OWWWWWWO....",
+            "...OWWSWWSWWO...",
+            "...OWWWWWWWSO...",
+            "....OO....OO....",
+            "................",
+        ],
+        "colors": {"O": "#1b2236", "W": "#c9d3e8", "S": "#8f9bb8", "B": "#7ae7ff"},
+    },
+}
+for _name, _c in CHARACTERS.items():
+    assert len(_c["rows"]) == 16 and all(len(r) == 16 for r in _c["rows"]), _name
+
+CHARACTER = "ghost"
 
 
-def ghost(x, y, px, bob=6, blink_dur="4s", extra_anim=""):
-    """A floating ghost that bobs in pixel steps and blinks."""
-    body = [row.replace("E", "W").replace("H", "W") for row in GHOST]
-    eyes_open = ["".join(ch if ch in "EH" else "." for ch in row) for row in GHOST]
-    eyes_closed = ["." * 16 for _ in GHOST]
-    eyes_closed[6] = ".....EE...EE...."
+def mascot(x, y, px, bob=6, blink_dur="4s"):
+    """The chosen character, bobbing in pixel steps and blinking."""
+    rows = CHARACTERS[CHARACTER]["rows"]
+    colors = CHARACTERS[CHARACTER]["colors"]
+    body = [row.replace("E", "W").replace("H", "W") for row in rows]
+    eyes_open = ["".join(ch if ch in "EH" else "." for ch in row) for row in rows]
+    # Closed eyes: a single line on the lowest eye row, across every eye column.
+    eye_rows = [r for r, row in enumerate(rows) if "E" in row]
+    eye_cols = {c for row in rows for c, ch in enumerate(row) if ch in "EH"}
+    eyes_closed = ["." * 16 for _ in rows]
+    eyes_closed[eye_rows[-1]] = "".join("E" if c in eye_cols else "." for c in range(16))
     parts = sprite_paths(body, 0, 0, px)
     op = sprite_paths(eyes_open, 0, 0, px)
     cl = sprite_paths(eyes_closed, 0, 0, px)
-    s = [f'<g transform="translate({x} {y})">{extra_anim}<g>',
+    s = [f'<g transform="translate({x} {y})"><g>',
          f'<animateTransform attributeName="transform" type="translate" values="0 0;0 {-bob};0 {-2 * bob};0 {-bob}" '
          f'dur="1.6s" calcMode="discrete" repeatCount="indefinite"/>']
     for key in "OWSB":
-        s.append(f'<path d="{parts[key]}" fill="{GHOST_COLORS[key]}"/>')
+        if key in parts:
+            s.append(f'<path d="{parts[key]}" fill="{colors[key]}"/>')
     s.append(f'<g><animate attributeName="opacity" values="1;0;1" keyTimes="0;0.92;0.97" dur="{blink_dur}" '
              f'calcMode="discrete" repeatCount="indefinite"/>'
-             f'<path d="{op["E"]}" fill="{INK}"/><path d="{op["H"]}" fill="#ffffff"/></g>')
+             f'<path d="{op["E"]}" fill="{INK}"/>'
+             + (f'<path d="{op["H"]}" fill="#ffffff"/>' if "H" in op else "") + "</g>")
     s.append(f'<g opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.92;0.97" dur="{blink_dur}" '
              f'calcMode="discrete" repeatCount="indefinite"/><path d="{cl["E"]}" fill="{INK}"/></g>')
     s.append("</g></g>")
@@ -233,7 +362,7 @@ def moon(cx, cy, px):
         rows[r] = rows[r][:c] + "C" + rows[r][c + 1:]
     p = sprite_paths(rows, cx - MOON * px, cy - MOON * px, px)
     return (f'<circle cx="{cx}" cy="{cy}" r="{MOON * px * 2}" fill="{YELLOW}" opacity="0.10"/>'
-            f'<path d="{p["M"]}" fill="#fff1c1"/><path d="{p["C"]}" fill="#f2d98d"/>')
+            f'<path d="{p["M"]}" fill="{MOON_LIGHT}"/><path d="{p["C"]}" fill="{MOON_DARK}"/>')
 
 
 def stars(rng, n, w, h, top=0, avoid=()):
@@ -279,7 +408,7 @@ def cloud(x, y, px, dur, begin, travel):
     p = sprite_paths(CLOUD, 0, 0, px)["#"]
     return (f'<g transform="translate({x} {y})"><g opacity="0.55">'
             f'<animateTransform attributeName="transform" type="translate" from="0 0" to="{travel} 0" dur="{dur}s" '
-            f'begin="-{begin}s" repeatCount="indefinite"/><path d="{p}" fill="#4a2e73"/></g></g>')
+            f'begin="-{begin}s" repeatCount="indefinite"/><path d="{p}" fill="{CLOUD}"/></g></g>')
 
 
 def sky(w, h, rx):
@@ -366,7 +495,7 @@ def banner(cfg):
         petals(rng, 16, W, H),
         skyline(rng, W, H - 4),
         f'<rect y="{H - 6}" width="{W}" height="6" fill="{PINK}" opacity="0.35"/>',
-        ghost(gx, ty - 26, gpx, bob=6),
+        mascot(gx, ty - 26, gpx, bob=6),
         f'<path d="{text_path(title, tx + max(2, tpx * 6 // 10), ty + max(2, tpx * 6 // 10), tpx)}" fill="{PINK}"/>',
         f'<path d="{text_path(title, tx, ty, tpx)}" fill="{CREAM}"/>',
         f'<path d="{text_path(sub1, tx, ty + 104, spx)}" fill="{CYAN}"/>',
@@ -405,11 +534,11 @@ def status_card(cfg):
         f'<path d="{text_path(clean(cfg["card_title"]), (W - text_width(clean(cfg["card_title"]), 2)) // 2, cy + 22, 2)}" fill="{MUTED}"/>',
         f'<rect x="{cx}" y="{cy + 56}" width="{cw}" height="2" fill="{CARD_LINE}"/>',
         # left panel
-        f'<rect x="{cx + 40}" y="{cy + 90}" width="300" height="300" rx="20" fill="#241a42" stroke="{CARD_LINE}" stroke-width="2"/>',
+        f'<rect x="{cx + 40}" y="{cy + 90}" width="300" height="300" rx="20" fill="{PANEL}" stroke="{CARD_LINE}" stroke-width="2"/>',
     ]
     rng = random.Random(3)
     body.append(stars(rng, 10, 260, 120, top=cy + 104).replace('<rect x="', f'<rect transform="translate({cx + 60} 0)" x="'))
-    body.append(ghost(cx + 40 + (300 - 160) // 2, cy + 150, 10, bob=5, blink_dur="3.4s"))
+    body.append(mascot(cx + 40 + (300 - 160) // 2, cy + 150, 10, bob=5, blink_dur="3.4s"))
     plate, pw = chip(0, 0, clean(cfg["player"])[:16], PINK)
     body.append(f'<g transform="translate({cx + 40 + (300 - pw) // 2} {cy + 340})">{plate}</g>')
     body.append(sparkle(cx + 64, cy + 112, 4, LAVENDER, 2.4, 0.2))
@@ -490,7 +619,7 @@ def footer(cfg):
         f'<animate attributeName="opacity" values="1;0" dur="1.1s" calcMode="discrete" repeatCount="indefinite"/></path>',
         # a little ghost drifting across the rooftops
         f'<g><animateTransform attributeName="transform" type="translate" from="-80 0" to="{W + 80} 0" dur="16s" repeatCount="indefinite"/>'
-        + ghost(0, 140, 3, bob=3, blink_dur="2.8s") + "</g>",
+        + mascot(0, 140, 3, bob=3, blink_dur="2.8s") + "</g>",
         "</g>",
         f'<rect x="1.5" y="1.5" width="{W - 3}" height="{H - 3}" rx="23" fill="none" stroke="{CARD_LINE}" stroke-width="3"/>',
     ]
@@ -505,6 +634,8 @@ def load_config(argv=None):
     p.add_argument("--handle", help="your GitHub username, shown as '> handle'")
     p.add_argument("--tagline", help="second banner line")
     p.add_argument("--stack", help="comma-separated stack chips, e.g. TS,GO,RUST")
+    p.add_argument("--theme", choices=sorted(THEMES), help="colour theme (default: dusk)")
+    p.add_argument("--character", choices=sorted(CHARACTERS), help="mascot (default: ghost)")
     args = p.parse_args(argv)
 
     cfg = dict(DEFAULTS)
@@ -515,17 +646,23 @@ def load_config(argv=None):
         if unknown:
             p.error(f"unknown config keys: {', '.join(sorted(unknown))}")
         cfg.update(user)
-    for key in ("title", "handle", "tagline"):
+    for key in ("title", "handle", "tagline", "theme", "character"):
         if getattr(args, key):
             cfg[key] = getattr(args, key)
     if args.stack:
         cfg["stack"] = [s.strip() for s in args.stack.split(",") if s.strip()]
+    if cfg["theme"] not in THEMES:
+        p.error(f"unknown theme {cfg['theme']!r}; choose from {', '.join(sorted(THEMES))}")
+    if cfg["character"] not in CHARACTERS:
+        p.error(f"unknown character {cfg['character']!r}; choose from {', '.join(sorted(CHARACTERS))}")
     return cfg, args.out
 
 
 def main(argv=None):
-    global OUT
+    global OUT, CHARACTER
     cfg, OUT = load_config(argv)
+    apply_theme(cfg["theme"])
+    CHARACTER = cfg["character"]
     os.makedirs(OUT, exist_ok=True)
     banner(cfg)
     status_card(cfg)
