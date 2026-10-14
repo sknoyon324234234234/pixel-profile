@@ -1,0 +1,17 @@
+{
+  "title": "THE GHOST",
+  "handle": "sknoyon324234234234",
+  "tagline": "BUILDING THINGS FOR THE WEB",
+  "card_title": "STATUS.EXE",
+  "player": "PLAYER 1",
+  "fields": [
+    ["NAME", "THE GHOST"],
+    ["CLASS", "CODER"],
+    ["BASE", "BANGLADESH"]
+  ],
+  "stack": ["TS", "JS", "PY", "PHP", "HTML", "CSS"],
+  "status": "ONLINE",
+  "quest": "BUILDING THINGS FOR THE WEB",
+  "footer": "THANKS FOR VISITING *",
+  "footer_hint": "PRESS START"
+}
